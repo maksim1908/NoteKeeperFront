@@ -1,0 +1,184 @@
+/* Общие стили для контейнера и формы */
+.center-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #f7f9fc;
+    font-family: 'Arial', sans-serif;
+  }
+
+form {
+    max-width: 420px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 2px solid #007bff; /* Добавлена граница вокруг формы */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease-in-out;
+    position: relative;
+}
+
+/* Плавное появление формы */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Стили для контейнера, чтобы разместить форму по центру страницы */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f7f9fc;
+    font-family: 'Arial', sans-serif;
+    background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'); /* Добавление текстуры фона */
+}
+
+/* Стили для заголовка приложения */
+h1 {
+    font-size: 32px;
+    color: #007bff;
+    font-family: 'Verdana', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Легкая тень для выделения */
+}
+
+/* Подзаголовок с описанием */
+h2 {
+    font-size: 20px;
+  color: #555;
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 0.5px;
+  margin-bottom: 30px; 
+}
+
+/* Стили для полей ввода */
+input {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background-color: #f4f7fc;
+}
+
+input:focus {
+    border-color: #007bff;
+    background-color: #e7f3fe;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+input::placeholder {
+    color: #888;
+    font-style: italic;
+}
+
+/* Стили для кнопок */
+button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-sizing: border-box;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Стили для дополнительных кнопок "Go to Login / Register" */
+button + button {
+    background-color: #6c757d;
+    margin-top: 10px;
+}
+
+button + button:hover {
+    background-color: #5a6268;
+}
+
+/* Стили для контейнера с ответами */
+div {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 480px) {
+    form {
+        padding: 20px;
+    }
+
+    input,
+    button {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
+
+/* Стили для фона, если форма имеет ошибку */
+form.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+form.error button {
+    background-color: #dc3545;
+}
+
+form.error input {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+}
+
+/* Анимация плавного исчезновения для успешных уведомлений */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.success-msg {
+    animation: fadeOut 3s ease-out;
+}

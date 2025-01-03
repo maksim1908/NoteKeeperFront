@@ -1,0 +1,496 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+/* Общие стили для контейнера заметок */
+.notes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  padding: 20px;
+  background-color: #f7f9fc;
+  box-sizing: border-box;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  margin-top: 280px;
+  padding-left: 70px;
+  padding-right: 50px;
+  opacity: 0; /* Начальная скрытость */
+  animation: fadeIn 1s forwards; /* Анимация появления */
+}
+
+/* Анимация для контейнера */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Убеждаемся, что карточки всегда равномерно располагаются */
+.note-card {
+  width: calc(20% - 20px);
+  min-width: 200px;
+  max-width: 200px;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f4f4f4;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+  transition: transform 0.3s ease-in-out;
+  opacity: 0;
+  animation: fadeInCard 0.5s forwards; /* Анимация появления карточек */
+  animation-delay: 0.2s; /* Задержка для карточек */
+}
+
+/* Анимация для каждой карточки */
+@keyframes fadeInCard {
+  0% {
+    opacity: 0;
+    transform: translateY(10px); /* Смещение вниз */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* Возврат в исходное положение */
+  }
+}
+
+/* Эффект на карточку при наведении */
+.note-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Заголовок карточки */
+.note-card h3 {
+  font-size: 18px;
+  color: #007bff;
+  margin: 0;
+}
+
+/* Контент карточки с прокруткой */
+.note-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+  margin: 0;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Обертка для контента с прокруткой */
+.note-card .content-wrapper {
+  max-height: 100px;
+  overflow: auto;
+}
+
+/* Время создания заметки */
+.note-card span {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 1024px) {
+  .note-card {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .note-card {
+    width: 100%;
+  }
+}
+
+.note-date {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.note-date strong {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Модальные окна */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.5s, opacity 0.5s ease;
+}
+
+.modal.open {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s 0s, opacity 0.5s ease;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.modal-content textarea {
+  height: 500px;
+  resize: none;
+  overflow-y: auto;
+}
+
+.fixed-textarea {
+  width: 100%;
+  height: 200px;
+  resize: none;
+  overflow-y: auto;
+}
+
+/* Поиск */
+
+/* Хедер */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.username {
+  font-size: 18px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 600;
+}
+
+.logout-button {
+  width: 150px;
+  height: 40px;
+  padding: 8px 16px;
+  background-color: #46398f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 40px;
+}
+
+.logout-button:hover {
+  background-color: #8176eb;
+}
+
+
+.search-container {
+  background: transparent;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 50px;
+  display: flex;
+  justify-content: space-between; /* Элементы на противоположных концах */
+  align-items: center;
+  padding: 1px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.button-container {
+  display: flex; /* Располагаем кнопки в одну строку */
+  gap: 10px; /* Задаем расстояние между кнопками */
+}
+
+.create-note-button, 
+.create-group-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px; /* Уменьшили длину кнопки */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: auto; /* Автоматическая подстройка под текст */
+}
+
+.create-note-button:hover {
+  background-color: #0056b3;
+}
+.create-group-button:hover {
+  background-color: #0056b3;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Элементы поиска справа */
+}
+
+.search-container input {
+  width: 200px;
+  padding: 8px;
+  border-radius: 5px;
+  background: transparent;
+  border: 1px solid #ccc;
+}
+
+.search-icon {
+  margin-left: 10px;
+}
+
+.clear-search {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+  font-size: 16px;
+  padding: 0;
+  margin-left: 10px;
+  height: auto;
+  width: auto;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Элемент будет начинать с небольшого смещения вниз */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Элемент вернётся в свою нормальную позицию */
+  }
+}
+
+/* Применяем анимацию к контейнеру */
+.groups-container {
+  position: fixed;
+  display: flex;
+  align-items: center; /* Выравниваем по центру по вертикали */
+  gap: 20px;
+  padding: 10px 20px;
+  background-color: #f7f9fc;
+  top: 120px; /* Отступ от верхней части экрана */
+  left: 0;
+  right: 0;
+  z-index: 200;
+  overflow-x: auto;  /* Горизонтальный скролл */
+  white-space: nowrap; /* Чтобы элементы не переносились на новую строку */
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  width: 100%; /* Ширина на 100% экрана */
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-in-out forwards; /* Анимация для контейнера */
+}
+
+/* Применяем анимацию к элементам внутри контейнера */
+.group-item,
+.group-item-all,
+.group-item-title {
+  animation: fadeInUp 0.5s ease-in-out forwards;
+  opacity: 0;
+}
+
+.group-item-all {
+  font-size: small;
+  width: 150px;
+  padding: 10px 15px;
+  background-color: #121118;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.group-item {
+  font-size: small;
+  width: 150px;
+  padding: 10px 15px;
+  background-color: #936dec;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.delete-group-button {
+  background: rgb(226, 148, 148);
+  border: none;
+  color: rgb(202, 20, 20);
+  cursor: pointer;
+  display: none;
+  font-size: 12px;
+  padding: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+}
+
+.group-item:hover .delete-group-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(32, 20, 20);
+}
+
+.group-item-title {
+  font-size: large;
+  width: 150px;
+  padding: 10px 15px;
+  background-color: transparent;
+  color: rgb(0, 0, 0);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.group-item:hover {
+  background-color: #5d3e85;
+}
+
+/* Медиазапросы для мобильных устройств */
+@media (max-width: 768px) {
+  .group-item {
+    width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .group-item {
+    width: 100px;
+  }
+}
+
+
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  appearance: none; /* Убираем стандартные стрелки */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Стиль для добавления стрелки */
+select::-ms-expand {
+  display: none;
+}
+
+select:focus {
+  outline: none;
+  border-color: #007bff;
+  background-color: #e8f4ff;
+}
+
+/* Стиль для выпадающего списка при наведении */
+select:hover {
+  background-color: #f0f8ff;
+}
+
+/* Добавляем кастомную стрелку для выпадающего списка */
+select::after {
+  content: "▼";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Стили для контейнера выпадающего списка */
+select option {
+  padding: 10px;
+  background-color: #fff;
+  color: #333;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+select option:hover {
+  background-color: #f1f1f1;
+}
+
+option:checked {
+  background-color: #007bff;
+  color: #fff;
+}
