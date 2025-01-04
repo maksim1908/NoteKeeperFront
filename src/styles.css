@@ -182,3 +182,36 @@ form.error input {
 .success-msg {
     animation: fadeOut 3s ease-out;
 }
+
+
+.toast-close-button {
+    background: transparent;
+    border: none;
+    color: #000; /* Цвет крестика */
+    font-size: 16px; /* Уменьшаем размер крестика */
+    cursor: pointer;
+    width: 20px;
+    align-items: center;
+    text-align: center;
+    margin-left: 10px;
+
+  }
+  
+  .toast-close-button:hover {
+    color: #f00; /* Цвет при наведении */
+    background-color: transparent;
+  }
+  
+  /* Настройка размера уведомления */
+  .toast-container {
+    font-size: 18px; /* Увеличиваем шрифт текста уведомления */
+    padding: 15px 20px; /* Увеличиваем отступы */
+    max-width: 400px; /* Максимальная ширина */
+    word-wrap: break-word; /* Обеспечиваем перенос длинных строк */
+  }
+  
+  .toast {
+    border-radius: 8px; /* Скругляем углы */
+    background-color: #444; /* Цвет фона */
+    color: white; /* Цвет текста */
+  }

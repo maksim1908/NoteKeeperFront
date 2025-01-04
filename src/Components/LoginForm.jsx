@@ -1,48 +1,55 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Для навигации
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../styles.css';
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 
 const LoginForm = () => {
-  const navigate = useNavigate(); // Хук для навигации
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-  const [loginResponse, setLoginResponse] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleError = (error) => {
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Validation 1failed");
+      }
+    };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
+    
       const response = await axios.post(
         "http://localhost:8081/api/auth/sign-in",
         formData
-      );
-      // Сохраняем токены в localStorage
-      localStorage.setItem("jwtToken", response.data.jwtToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
-      
-      setLoginResponse(response.data); // Можно оставить для проверки в будущем, но выводить не будем
-      alert("Авторизация успешна");
-      navigate("/MainPage"); // Переход на защищенную страницу после авторизации
-    } catch (error) {
-      console.error("Ошибка авторизации:", error);
-      alert("Ошибка авторизации");
-    }
+      ).then((response) => {
+        // Сохраняем токены в localStorage
+        localStorage.setItem("jwtToken", response.data.jwtToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+         
+         setTimeout(() => {
+          navigate("/MainPage");
+        }, 1000);
+      })
+      .catch(handleError);
   };
 
   const handleRegisterClick = () => {
-    navigate("/register"); // Переход на страницу регистрации
+    navigate("/register");
   };
 
   return (
     <div className="center-container">
-      <h1>Welcome to Note Keeper App</h1> {/* Приветствие с названием приложения */}
-      <h2>Your personal note-taking app</h2> {/* Подзаголовок с описанием */}
+      <h1>Welcome to Note Keeper App</h1>
+      <h2>Your personal note-taking app</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -61,8 +68,22 @@ const LoginForm = () => {
           required
         />
         <button type="submit">Sign In</button>
-        <button onClick={handleRegisterClick}>Create an Account</button> {/* Кнопка для перехода на регистрацию */}
+        <button type="button" onClick={handleRegisterClick}>
+          Create an Account
+        </button>
       </form>
+      <ToastContainer 
+  position="top-right" 
+  autoClose={3000} 
+  hideProgressBar 
+  newestOnTop 
+  closeOnClick 
+  rtl={false} 
+  pauseOnFocusLoss 
+  draggable 
+  pauseOnHover 
+  closeButton={<button className="toast-close-button">X</button>}
+/>{/* Добавляем ToastContainer */}
     </div>
   );
 };

@@ -3,7 +3,8 @@ import axios from 'axios';
 import './MainPage.css';
 import { FaEdit, FaTrash, FaSearch, FaTimes } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 const MainPage = () => {
   const [notes, setNotes] = useState([]);
   const [editingNote, setEditingNote] = useState(null);
@@ -18,6 +19,15 @@ const MainPage = () => {
   const [newGroup, setNewGroup] = useState({ title: '' });
   const navigate = useNavigate();
 
+  // Функция для вывода ошибки с помощью Toast
+  const handleError = (error) => {
+    if (error.response && error.response.data && error.response.data.message) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error("Validation failed");
+    }
+  };
+
   const handleCreateGroup = () => {
     const token = localStorage.getItem('jwtToken');
     axios.post('http://localhost:8081/api/group', newGroup, {
@@ -28,9 +38,8 @@ const MainPage = () => {
         setIsCreatingGroup(false);
         setNewGroup({ title: '' });
       })
-      .catch((error) => {
-        console.error('Ошибка при создании группы:', error);
-      });
+      .catch(handleError)
+      setNewGroup({ title: '' });
   };
 
 
@@ -194,7 +203,7 @@ const MainPage = () => {
         setIsCreatingNote(false);
         setNewNote({ title: '', content: '', reminderTime: '' });
       })
-      .catch((error) => console.error('Ошибка при создании заметки:', error));
+      .catch(handleError);
   };
 
   return (
@@ -275,7 +284,18 @@ const MainPage = () => {
             <input
               type="datetime-local"
               value={newNote.reminderTime}
-              onChange={(e) => setNewNote({ ...newNote, reminderTime: e.target.value })}
+              min={new Date().toISOString().slice(0, 16)}
+              onChange={(e) => {
+                const selectedTime = new Date(e.target.value);
+                const now = new Date();
+                if (selectedTime < now) {
+                  // Если выбрано время в прошлом, сбрасываем значение
+                  toast.error("You cannot select a past time!");
+                  e.target.value = newNote.reminderTime; // Сохраняем текущее значение
+                } else {
+                  setNewNote({ ...newNote, reminderTime: e.target.value });
+                }
+              }}
             />
             <button onClick={handleCreateNote}>Save</button>
             <button onClick={() => setIsCreatingNote(false)}>Cancel</button>
@@ -353,10 +373,21 @@ const MainPage = () => {
               />
               <p>Reminder Time:</p>
               <input
-                type="datetime-local"
-                value={editingNote.reminderTime ? editingNote.reminderTime : ''}
-                onChange={(e) => setEditingNote({ ...editingNote, reminderTime: e.target.value })}
-              />
+  type="datetime-local"
+  value={editingNote.reminderTime ? editingNote.reminderTime : ''}
+  min={new Date().toISOString().slice(0, 16)} // Устанавливаем минимальное значение времени
+  onChange={(e) => {
+    const selectedTime = new Date(e.target.value);
+    const now = new Date();
+    if (selectedTime < now) {
+      // Если выбранное время меньше текущего времени, сбрасываем значение и показываем ошибку
+      toast.error("You cannot select a past time!");
+      e.target.value = editingNote.reminderTime; // Возвращаем предыдущее значение
+    } else {
+      setEditingNote({ ...editingNote, reminderTime: e.target.value });
+    }
+  }}
+/>
               {/* Выпадающий список для выбора группы */}
       <p>Group:</p>
       <select
@@ -382,9 +413,7 @@ const MainPage = () => {
                       setEditingNote(null);
                       fetchNotes();
                     })
-                    .catch((error) => {
-                      console.error("Ошибка при обновлении заметки:", error);
-                    });
+                    .catch(handleError);
                 }}
               >
                 Save Changes
@@ -393,6 +422,18 @@ const MainPage = () => {
             </div>
           </div>
         )}
+        <ToastContainer 
+          position="top-right" 
+          autoClose={3000} 
+          hideProgressBar 
+          newestOnTop 
+          closeOnClick 
+          rtl={false} 
+          pauseOnFocusLoss 
+          draggable 
+          pauseOnHover 
+          closeButton={<button className="toast-close-button">X</button>}
+        />
       </div>
   );
 };

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
 import '../styles.css';
-
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -17,9 +18,17 @@ const RegisterForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+const handleError = (error) => {
+    if (error.response && error.response.data && error.response.data.message) {
+      toast.error(error.response.data.message);
+    } else {
+      toast.error("Validation failed");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
+    
       const response = await axios.post(
         "http://localhost:8081/api/auth/register",
         formData, // Отправляем данные формы
@@ -28,15 +37,15 @@ const RegisterForm = () => {
             "Content-Type": "application/json", // Указываем, что данные отправляются в формате JSON
           },
         }
-      );
-      setRegisterResponse(response.data); // Ответ сервера, если регистрация успешна
-      alert("Регистрация успешна");
-      // После успешной регистрации, перенаправляем на страницу входа
-      navigate("/login"); 
-    } catch (error) {
-      console.error("Ошибка регистрации:", error);
-      alert("Ошибка регистрации");
-    }
+      ).then(()=>{
+        setRegisterResponse(response.data); // Ответ сервера, если регистрация успешна
+        alert("Регистрация успешна");
+        toast.success("Регистрация успешна");
+        // После успешной регистрации, перенаправляем на страницу входа
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      }).catch(handleError);
   };
 
   const handleGoToLogin = () => {
@@ -83,6 +92,17 @@ const RegisterForm = () => {
         <button type="submit">Register</button>
         <button onClick={handleGoToLogin}>Go to Login</button> {/* Кнопка для перехода на форму входа */}
       </form>
+      <ToastContainer 
+        position="top-right" 
+        autoClose={3000} 
+        hideProgressBar 
+        newestOnTop 
+        closeOnClick 
+        rtl={false} 
+        pauseOnFocusLoss 
+        draggable 
+        pauseOnHover 
+        closeButton={<button className="toast-close-button">X</button>}/>
       {registerResponse && (
         <div>
           <h3>Registration Response</h3>
